@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MatchDay — Sports Dashboard</title>
+
+<!-- Bootstrap 5 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Mobile top bar (visible < lg) -->
+<div class="mobile-topbar d-flex d-lg-none align-items-center justify-content-between px-3">
+  <button class="btn btn-icon" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
+    <i class="bi bi-list"></i>
+  </button>
+  <span class="brand"><i class="bi bi-lightning-charge-fill"></i> MatchDay</span>
+  <div class="avatar-sm-badge">
+    <i class="bi bi-person-fill"></i>
+  </div>
+</div>
+
+<!-- Offcanvas sidebar (mobile ONLY - placed outside app-shell) -->
+<div class="offcanvas offcanvas-start sidebar-offcanvas" tabindex="-1" id="sidebarOffcanvas">
+  <div class="offcanvas-header">
+    <span class="brand"><i class="bi bi-lightning-charge-fill"></i> MatchDay</span>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <nav class="nav flex-column sidebar-nav p-3">
+      <a class="nav-link active" data-view="dashboard" href="#dashboard"><i class="bi bi-grid-1x2"></i><span>Dashboard</span></a>
+      <a class="nav-link" data-view="matches" href="#matches"><i class="bi bi-dribbble"></i><span>Matches</span></a>
+      <a class="nav-link" data-view="players" href="#players"><i class="bi bi-person-badge"></i><span>Players</span></a>
+      <a class="nav-link" data-view="teams" href="#teams"><i class="bi bi-shield"></i><span>Teams</span></a>
+      <a class="nav-link" data-view="standings" href="#standings"><i class="bi bi-trophy"></i><span>Standings</span></a>
+      <a class="nav-link" data-view="transfers" href="#transfers"><i class="bi bi-arrow-left-right"></i><span>Transfers</span></a>
+      <a class="nav-link" data-view="settings" href="#settings"><i class="bi bi-gear"></i><span>Settings</span></a>
+    </nav>
+  </div>
+</div>
+
+<div class="app-shell">
+
+  <!-- Desktop Sidebar -->
+  <aside class="sidebar d-none d-lg-flex flex-column">
+    <div class="brand-block">
+      <span class="brand-mark"><i class="bi bi-lightning-charge-fill"></i></span>
+      <span class="brand">MatchDay</span>
+    </div>
+
+    <nav class="nav flex-column sidebar-nav">
+      <a class="nav-link active" data-view="dashboard" href="#dashboard"><i class="bi bi-grid-1x2"></i><span>Dashboard</span></a>
+      <a class="nav-link" data-view="matches" href="#matches"><i class="bi bi-dribbble"></i><span>Matches</span></a>
+      <a class="nav-link" data-view="players" href="#players"><i class="bi bi-person-badge"></i><span>Players</span></a>
+      <a class="nav-link" data-view="teams" href="#teams"><i class="bi bi-shield"></i><span>Teams</span></a>
+      <a class="nav-link" data-view="standings" href="#standings"><i class="bi bi-trophy"></i><span>Standings</span></a>
+      <a class="nav-link" data-view="transfers" href="#transfers"><i class="bi bi-arrow-left-right"></i><span>Transfers</span></a>
+      <a class="nav-link" data-view="settings" href="#settings"><i class="bi bi-gear"></i><span>Settings</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="season-card">
+        <div class="d-flex justify-content-between small mb-1">
+          <span>Season progress</span><span>28/38</span>
+        </div>
+        <div class="season-bar"><div class="season-fill" style="width:74%"></div></div>
+      </div>
+      <a href="#" class="nav-link logout"><i class="bi bi-box-arrow-left"></i><span>Log out</span></a>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main-content">
+
+    <!-- Top bar (desktop) -->
+    <header class="topbar d-none d-lg-flex align-items-center justify-content-between">
+      <div>
+        <h1 class="page-title mb-0" id="page-title">Dashboard</h1>
+        <p class="page-sub mb-0" id="page-sub">Matchweek 28 — season 2025/26</p>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Search players, teams...">
+        </div>
+        <button class="btn-icon" title="Notifications"><i class="bi bi-bell"></i></button>
+        <div class="avatar-badge" title="User Profile">
+          <i class="bi bi-person-fill"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- VIEW 1: DASHBOARD -->
+    <div id="view-dashboard" class="view-section active-view">
+      <!-- Live score ticker -->
+      <section class="ticker mb-4">
+        <span class="ticker-tag"><i class="bi bi-broadcast"></i> LIVE</span>
+        <div class="ticker-track">
+          <span>Falcons 2 – 1 Rovers <em>78'</em></span>
+          <span>Titans 0 – 0 United <em>34'</em></span>
+          <span>Wanderers 3 – 2 Rangers <em>FT</em></span>
+          <span>Harriers 1 – 1 Albion <em>61'</em></span>
+        </div>
+      </section>
+
+      <!-- Stat cards -->
+      <section class="row g-3 stat-row">
+        <div class="col-6 col-xl-3">
+          <div class="stat-card card-won">
+            <div class="stat-content">
+              <span class="stat-icon"><i class="bi bi-trophy-fill text-warning"></i></span>
+              <span class="stat-label">Matches Won</span>
+              <div class="stat-value text-white">21<span class="stat-unit">/28</span></div>
+              <span class="pill up"><i class="bi bi-arrow-up-right"></i> 75% win rate</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+          <div class="stat-card card-scorer">
+            <div class="stat-content">
+              <span class="stat-icon"><i class="bi bi-bullseye text-danger"></i></span>
+              <span class="stat-label">Top Scorer — R. Dias</span>
+              <div class="stat-value text-white">19<span class="stat-unit">goals</span></div>
+              <span class="pill up"><i class="bi bi-arrow-up-right"></i> +3 this month</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+          <div class="stat-card card-rank">
+            <div class="stat-content">
+              <span class="stat-icon"><i class="bi bi-bar-chart-line-fill text-warning"></i></span>
+              <span class="stat-label">League Rank</span>
+              <div class="stat-value text-white">#2<span class="stat-unit">of 20</span></div>
+              <span class="pill down"><i class="bi bi-arrow-down-right"></i> -1 spot</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+          <div class="stat-card card-next">
+            <div class="stat-content">
+              <span class="stat-icon"><i class="bi bi-clock-fill text-info"></i></span>
+              <span class="stat-label">Next Match — vs Rovers FC</span>
+              <div class="stat-value text-white">02<span class="stat-unit">d : 14h</span></div>
+              <span class="pill neutral"><i class="bi bi-geo-alt"></i> Home · Emerald Park</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chart + fixtures -->
+      <section class="row g-3 mt-1">
+        <div class="col-lg-8">
+          <div class="panel h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="panel-title mb-0">Goals scored per matchweek</h2>
+              <div class="btn-group btn-group-sm range-toggle" role="group">
+                <button type="button" class="btn active">Last 10</button>
+                <button type="button" class="btn">Full season</button>
+              </div>
+            </div>
+            <div class="chart-placeholder">
+              <svg viewBox="0 0 600 220" preserveAspectRatio="none">
+                <polyline fill="none" stroke="var(--accent)" stroke-width="3"
+                  points="0,160 60,140 120,150 180,90 240,120 300,70 360,95 420,50 480,80 540,35 600,60" />
+                <polygon fill="url(#grad)" opacity="0.35"
+                  points="0,160 60,140 120,150 180,90 240,120 300,70 360,95 420,50 480,80 540,35 600,60 600,220 0,220" />
+                <defs>
+                  <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--accent)"/>
+                    <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="panel h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="panel-title mb-0">Upcoming fixtures</h2>
+              <a href="#matches" class="see-all nav-switch-link" data-target-view="matches">All <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <ul class="fixture-list">
+              <li>
+                <div class="team-crest rovers"><i class="bi bi-shield-fill"></i></div>
+                <div class="flex-grow-1">
+                  <p class="mb-0">vs Rovers FC</p>
+                  <span class="time">Sat, 2 Aug · Home</span>
+                </div>
+                <span class="tag home">H</span>
+              </li>
+              <li>
+                <div class="team-crest united"><i class="bi bi-lightning-charge-fill"></i></div>
+                <div class="flex-grow-1">
+                  <p class="mb-0">vs United FC</p>
+                  <span class="time">Sat, 9 Aug · Away</span>
+                </div>
+                <span class="tag away">A</span>
+              </li>
+              <li>
+                <div class="team-crest albion"><i class="bi bi-star-fill"></i></div>
+                <div class="flex-grow-1">
+                  <p class="mb-0">vs Albion</p>
+                  <span class="time">Sat, 16 Aug · Home</span>
+                </div>
+                <span class="tag home">H</span>
+              </li>
+              <li>
+                <div class="team-crest rangers"><i class="bi bi-fire"></i></div>
+                <div class="flex-grow-1">
+                  <p class="mb-0">vs Rangers</p>
+                  <span class="time">Sat, 23 Aug · Away</span>
+                </div>
+                <span class="tag away">A</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Player stats table -->
+      <section class="panel mt-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="panel-title mb-0">Player performance</h2>
+          <a href="#players" class="see-all nav-switch-link" data-target-view="players">See full squad <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="table-responsive">
+          <table class="table match-table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Position</th>
+                <th>Goals</th>
+                <th>Assists</th>
+                <th>Rating</th>
+                <th>Fitness</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="player-cell">
+                  <div class="player-avatar" style="background: linear-gradient(135deg, #FF5A36, #FF8A00);">RD</div>
+                  <span>R. Dias</span>
+                </td>
+                <td>Forward</td>
+                <td class="mono">19</td>
+                <td class="mono">6</td>
+                <td class="mono text-warning fw-bold">8.4</td>
+                <td><span class="status good">Fit</span></td>
+              </tr>
+              <tr>
+                <td class="player-cell">
+                  <div class="player-avatar" style="background: linear-gradient(135deg, #3B82F6, #1D4ED8);">KO</div>
+                  <span>K. Owusu</span>
+                </td>
+                <td>Midfielder</td>
+                <td class="mono">8</td>
+                <td class="mono">14</td>
+                <td class="mono text-warning fw-bold">7.9</td>
+                <td><span class="status good">Fit</span></td>
+              </tr>
+              <tr>
+                <td class="player-cell">
+                  <div class="player-avatar" style="background: linear-gradient(135deg, #10B981, #059669);">JB</div>
+                  <span>J. Bianchi</span>
+                </td>
+                <td>Defender</td>
+                <td class="mono">2</td>
+                <td class="mono">3</td>
+                <td class="mono text-warning fw-bold">7.2</td>
+                <td><span class="status watch">Knock</span></td>
+              </tr>
+              <tr>
+                <td class="player-cell">
+                  <div class="player-avatar" style="background: linear-gradient(135deg, #8B5CF6, #6D28D9);">MA</div>
+                  <span>M. Alvarez</span>
+                </td>
+                <td>Goalkeeper</td>
+                <td class="mono">0</td>
+                <td class="mono">0</td>
+                <td class="mono text-warning fw-bold">7.6</td>
+                <td><span class="status out">Injured</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- VIEW 2: MATCHES -->
+    <div id="view-matches" class="view-section">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div class="filter-btn-group btn-group" role="group">
+          <button type="button" class="btn active">All Matches</button>
+          <button type="button" class="btn">Premier League</button>
+          <button type="button" class="btn">Champions League</button>
+          <button type="button" class="btn">Cup Ties</button>
+        </div>
+        <span class="text-muted small"><i class="bi bi-calendar3"></i> August 2026</span>
+      </div>
+
+      <div class="row g-3">
+        <!-- Live Match Card -->
+        <div class="col-md-6 col-xl-4">
+          <div class="match-card">
+            <div class="match-header">
+              <span class="badge bg-danger"><i class="bi bi-broadcast"></i> LIVE 78'</span>
+              <span>Premier League</span>
+            </div>
+            <div class="match-teams">
+              <div class="team-item">
+                <div class="team-crest falcons">FC</div>
+                <span>Falcons FC</span>
+              </div>
+              <div class="score-box text-warning">2 - 1</div>
+              <div class="team-item">
+                <div class="team-crest rovers">RC</div>
+                <span>Rovers FC</span>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center text-muted small mt-3 pt-2 border-top border-secondary">
+              <span><i class="bi bi-geo-alt"></i> Emerald Stadium</span>
+              <a href="#" class="see-all">Live Center <i class="bi bi-chevron-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Match Card 2 -->
+        <div class="col-md-6 col-xl-4">
+          <div class="match-card">
+            <div class="match-header">
+              <span class="badge bg-danger"><i class="bi bi-broadcast"></i> LIVE 34'</span>
+              <span>Premier League</span>
+            </div>
+            <div class="match-teams">
+              <div class="team-item">
+                <div class="team-crest titans">TC</div>
+                <span>Titans</span>
+              </div>
+              <div class="score-box text-warning">0 - 0</div>
+              <div class="team-item">
+                <div class="team-crest united">UC</div>
+                <span>United</span>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center text-muted small mt-3 pt-2 border-top border-secondary">
+              <span><i class="bi bi-geo-alt"></i> Titan Arena</span>
+              <a href="#" class="see-all">Live Center <i class="bi bi-chevron-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Match Card -->
+        <div class="col-md-6 col-xl-4">
+          <div class="match-card">
+            <div class="match-header">
+              <span class="badge bg-primary">SAT 15:00</span>
+              <span>Premier League</span>
+            </div>
+            <div class="match-teams">
+              <div class="team-item">
+                <div class="team-crest falcons">FC</div>
+                <span>Falcons FC</span>
+              </div>
+              <div class="score-box text-muted">VS</div>
+              <div class="team-item">
+                <div class="team-crest albion">AC</div>
+                <span>Albion</span>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center text-muted small mt-3 pt-2 border-top border-secondary">
+              <span><i class="bi bi-geo-alt"></i> Emerald Stadium</span>
+              <a href="#" class="see-all">Preview <i class="bi bi-chevron-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Finished Match Card -->
+        <div class="col-md-6 col-xl-4">
+          <div class="match-card">
+            <div class="match-header">
+              <span class="badge bg-secondary">FINISHED</span>
+              <span>Champions League</span>
+            </div>
+            <div class="match-teams">
+              <div class="team-item">
+                <div class="team-crest wanderers">WC</div>
+                <span>Wanderers</span>
+              </div>
+              <div class="score-box text-success">3 - 2</div>
+              <div class="team-item">
+                <div class="team-crest rangers">RF</div>
+                <span>Rangers</span>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center text-muted small mt-3 pt-2 border-top border-secondary">
+              <span><i class="bi bi-geo-alt"></i> Olympic Dome</span>
+              <a href="#" class="see-all">Highlights <i class="bi bi-chevron-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: PLAYERS -->
+    <div id="view-players" class="view-section">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div class="filter-btn-group btn-group" role="group">
+          <button type="button" class="btn active">All Squad</button>
+          <button type="button" class="btn">Forwards</button>
+          <button type="button" class="btn">Midfielders</button>
+          <button type="button" class="btn">Defenders</button>
+          <button type="button" class="btn">Goalkeepers</button>
+        </div>
+        <div class="search-box" style="width: auto;">
+          <i class="bi bi-filter"></i>
+          <input type="text" placeholder="Filter player name...">
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <!-- Player 1 -->
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+          <div class="player-card">
+            <div class="player-avatar card-lg" style="background: linear-gradient(135deg, #FF5A36, #FF8A00);">RD</div>
+            <h3>R. Dias</h3>
+            <span class="position-badge"><i class="bi bi-lightning-fill text-warning"></i> Striker · #9</span>
+            <div class="stats-row">
+              <div class="stat-box">
+                <label>Goals</label>
+                <span class="text-success">19</span>
+              </div>
+              <div class="stat-box">
+                <label>Assists</label>
+                <span class="text-info">6</span>
+              </div>
+              <div class="stat-box">
+                <label>Rating</label>
+                <span class="text-warning">8.4</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Player 2 -->
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+          <div class="player-card">
+            <div class="player-avatar card-lg" style="background: linear-gradient(135deg, #3B82F6, #1D4ED8);">KO</div>
+            <h3>K. Owusu</h3>
+            <span class="position-badge"><i class="bi bi-star-fill text-info"></i> Playmaker · #10</span>
+            <div class="stats-row">
+              <div class="stat-box">
+                <label>Goals</label>
+                <span class="text-success">8</span>
+              </div>
+              <div class="stat-box">
+                <label>Assists</label>
+                <span class="text-info">14</span>
+              </div>
+              <div class="stat-box">
+                <label>Rating</label>
+                <span class="text-warning">7.9</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Player 3 -->
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+          <div class="player-card">
+            <div class="player-avatar card-lg" style="background: linear-gradient(135deg, #10B981, #059669);">JB</div>
+            <h3>J. Bianchi</h3>
+            <span class="position-badge"><i class="bi bi-shield-fill text-primary"></i> Center Back · #4</span>
+            <div class="stats-row">
+              <div class="stat-box">
+                <label>Tackles</label>
+                <span class="text-success">42</span>
+              </div>
+              <div class="stat-box">
+                <label>Clean Sheets</label>
+                <span class="text-info">11</span>
+              </div>
+              <div class="stat-box">
+                <label>Rating</label>
+                <span class="text-warning">7.2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Player 4 -->
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+          <div class="player-card">
+            <div class="player-avatar card-lg" style="background: linear-gradient(135deg, #8B5CF6, #6D28D9);">MA</div>
+            <h3>M. Alvarez</h3>
+            <span class="position-badge"><i class="bi bi-hand-index-thumb-fill text-danger"></i> Goalkeeper · #1</span>
+            <div class="stats-row">
+              <div class="stat-box">
+                <label>Saves</label>
+                <span class="text-success">68</span>
+              </div>
+              <div class="stat-box">
+                <label>Clean Sheets</label>
+                <span class="text-info">12</span>
+              </div>
+              <div class="stat-box">
+                <label>Rating</label>
+                <span class="text-warning">7.6</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: TEAMS -->
+    <div id="view-teams" class="view-section">
+      <div class="row g-3">
+        <!-- Team 1 -->
+        <div class="col-md-6 col-xl-4">
+          <div class="team-card">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="team-crest lg falcons">FC</div>
+              <div>
+                <h3 class="h5 mb-1 text-white">Falcons FC</h3>
+                <span class="badge bg-success">Rank #2</span>
+                <span class="text-muted small ms-2">Manager: M. Silva</span>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between text-muted small mb-2">
+              <span>Recent Form</span>
+              <div>
+                <span class="form-badge w">W</span>
+                <span class="form-badge w">W</span>
+                <span class="form-badge d">D</span>
+                <span class="form-badge w">W</span>
+                <span class="form-badge l">L</span>
+              </div>
+            </div>
+            <div class="progress mb-2" style="height: 6px; background: rgba(255,255,255,0.08);">
+              <div class="progress-bar bg-success" style="width: 75%;"></div>
+            </div>
+            <div class="d-flex justify-content-between small text-muted">
+              <span>21 Wins · 4 Draws · 3 Losses</span>
+              <span class="text-white">67 Points</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team 2 -->
+        <div class="col-md-6 col-xl-4">
+          <div class="team-card">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="team-crest lg rovers">RC</div>
+              <div>
+                <h3 class="h5 mb-1 text-white">Rovers FC</h3>
+                <span class="badge bg-warning text-dark">Rank #1</span>
+                <span class="text-muted small ms-2">Manager: C. Ancelotti</span>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between text-muted small mb-2">
+              <span>Recent Form</span>
+              <div>
+                <span class="form-badge w">W</span>
+                <span class="form-badge w">W</span>
+                <span class="form-badge w">W</span>
+                <span class="form-badge d">D</span>
+                <span class="form-badge w">W</span>
+              </div>
+            </div>
+            <div class="progress mb-2" style="height: 6px; background: rgba(255,255,255,0.08);">
+              <div class="progress-bar bg-warning" style="width: 82%;"></div>
+            </div>
+            <div class="d-flex justify-content-between small text-muted">
+              <span>23 Wins · 3 Draws · 2 Losses</span>
+              <span class="text-white">72 Points</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team 3 -->
+        <div class="col-md-6 col-xl-4">
+          <div class="team-card">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="team-crest lg united">UC</div>
+              <div>
+                <h3 class="h5 mb-1 text-white">United FC</h3>
+                <span class="badge bg-primary">Rank #3</span>
+                <span class="text-muted small ms-2">Manager: E. Ten Hag</span>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between text-muted small mb-2">
+              <span>Recent Form</span>
+              <div>
+                <span class="form-badge d">D</span>
+                <span class="form-badge w">W</span>
+                <span class="form-badge l">L</span>
+                <span class="form-badge w">W</span>
+                <span class="form-badge w">W</span>
+              </div>
+            </div>
+            <div class="progress mb-2" style="height: 6px; background: rgba(255,255,255,0.08);">
+              <div class="progress-bar bg-primary" style="width: 68%;"></div>
+            </div>
+            <div class="d-flex justify-content-between small text-muted">
+              <span>18 Wins · 5 Draws · 5 Losses</span>
+              <span class="text-white">59 Points</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 5: STANDINGS -->
+    <div id="view-standings" class="view-section">
+      <div class="panel">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+          <h2 class="panel-title mb-0"><i class="bi bi-trophy-fill text-warning me-2"></i> League Table 2025/26</h2>
+          <div class="d-flex gap-3 small">
+            <span class="text-success"><i class="bi bi-circle-fill"></i> Champions League</span>
+            <span class="text-info"><i class="bi bi-circle-fill"></i> Europa League</span>
+            <span class="text-danger"><i class="bi bi-circle-fill"></i> Relegation</span>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table match-table align-middle mb-0">
+            <thead>
+              <tr>
+                <th style="width: 50px;">Pos</th>
+                <th>Club</th>
+                <th class="text-center">P</th>
+                <th class="text-center">W</th>
+                <th class="text-center">D</th>
+                <th class="text-center">L</th>
+                <th class="text-center">GF</th>
+                <th class="text-center">GA</th>
+                <th class="text-center">GD</th>
+                <th class="text-center fw-bold">Pts</th>
+                <th class="text-end">Form</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-left: 3px solid var(--gold);">
+                <td class="fw-bold text-warning">1</td>
+                <td class="player-cell">
+                  <div class="team-crest sm rovers">RC</div>
+                  <span class="text-white fw-bold">Rovers FC</span>
+                </td>
+                <td class="text-center mono">28</td>
+                <td class="text-center mono">23</td>
+                <td class="text-center mono">3</td>
+                <td class="text-center mono">2</td>
+                <td class="text-center mono">68</td>
+                <td class="text-center mono">21</td>
+                <td class="text-center mono text-success">+47</td>
+                <td class="text-center mono fw-bold text-warning fs-6">72</td>
+                <td class="text-end">
+                  <span class="form-badge w">W</span>
+                  <span class="form-badge w">W</span>
+                  <span class="form-badge w">W</span>
+                  <span class="form-badge d">D</span>
+                  <span class="form-badge w">W</span>
+                </td>
+              </tr>
+              <tr style="border-left: 3px solid var(--pitch);">
+                <td class="fw-bold text-success">2</td>
+                <td class="player-cell">
+                  <div class="team-crest sm falcons">FC</div>
+                  <span class="text-white fw-bold">Falcons FC</span>
+                </td>
+                <td class="text-center mono">28</td>
+                <td class="text-center mono">21</td>
+                <td class="text-center mono">4</td>
+                <td class="text-center mono">3</td>
+                <td class="text-center mono">61</td>
+                <td class="text-center mono">24</td>
+                <td class="text-center mono text-success">+37</td>
+                <td class="text-center mono fw-bold text-success fs-6">67</td>
+                <td class="text-end">
+                  <span class="form-badge w">W</span>
+                  <span class="form-badge w">W</span>
+                  <span class="form-badge d">D</span>
+                  <span class="form-badge w">W</span>
+                  <span class="form-badge l">L</span>
+                </td>
+              </tr>
+              <tr style="border-left: 3px solid var(--pitch);">
+                <td class="fw-bold text-success">3</td>
+                <td class="player-cell">
+                  <div class="team-crest sm united">UC</div>
+                  <span class="text-white">United FC</span>
+                </td>
+                <td class="text-center mono">28</td>
+                <td class="text-center mono">18</td>
+                <td class="text-center mono">5</td>
+                <td class="text-center mono">5</td>
+                <td class="text-center mono">52</td>
+                <td class="text-center mono">30</td>
+                <td class="text-center mono text-success">+22</td>
+                <td class="text-center mono fw-bold text-white fs-6">59</td>
+                <td class="text-end">
+                  <span class="form-badge d">D</span>
+                  <span class="form-badge w">W</span>
+                  <span class="form-badge l">L</span>
+                  <span class="form-badge w">W</span>
+                  <span class="form-badge w">W</span>
+                </td>
+              </tr>
+              <tr style="border-left: 3px solid var(--blue);">
+                <td class="fw-bold text-info">4</td>
+                <td class="player-cell">
+                  <div class="team-crest sm titans">TC</div>
+                  <span class="text-white">Titans</span>
+                </td>
+                <td class="text-center mono">28</td>
+                <td class="text-center mono">16</td>
+                <td class="text-center mono">7</td>
+                <td class="text-center mono">5</td>
+                <td class="text-center mono">48</td>
+                <td class="text-center mono">29</td>
+                <td class="text-center mono text-success">+19</td>
+                <td class="text-center mono fw-bold text-white fs-6">55</td>
+                <td class="text-end">
+                  <span class="form-badge w">W</span>
+                  <span class="form-badge d">D</span>
+                  <span class="form-badge d">D</span>
+                  <span class="form-badge w">W</span>
+                  <span class="form-badge l">L</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 6: TRANSFERS -->
+    <div id="view-transfers" class="view-section">
+      <div class="row g-3">
+        <div class="col-lg-8">
+          <div class="panel">
+            <h2 class="panel-title mb-3"><i class="bi bi-fire text-danger me-2"></i> Summer Transfer Market</h2>
+            
+            <div class="transfer-card">
+              <div class="d-flex align-items-center gap-3">
+                <div class="player-avatar" style="width: 44px; height: 44px; font-size: 0.95rem; background: linear-gradient(135deg, #EC4899, #BE185D);">VO</div>
+                <div>
+                  <h4 class="h6 mb-0 text-white">V. Osimhen</h4>
+                  <span class="text-muted small">Forward · Age 26</span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-muted small">Napoli</span>
+                <i class="bi bi-arrow-right text-warning fs-5"></i>
+                <span class="text-success fw-bold">Falcons FC</span>
+              </div>
+              <div class="text-end">
+                <span class="badge bg-success fs-6">€85.0M</span>
+                <div class="text-muted extra-small">Confirmed</div>
+              </div>
+            </div>
+
+            <div class="transfer-card">
+              <div class="d-flex align-items-center gap-3">
+                <div class="player-avatar" style="width: 44px; height: 44px; font-size: 0.95rem; background: linear-gradient(135deg, #06B6D4, #0891B2);">FW</div>
+                <div>
+                  <h4 class="h6 mb-0 text-white">F. Wirtz</h4>
+                  <span class="text-muted small">Attacking Mid · Age 22</span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-muted small">Bayer 04</span>
+                <i class="bi bi-arrow-right text-warning fs-5"></i>
+                <span class="text-info fw-bold">Rovers FC</span>
+              </div>
+              <div class="text-end">
+                <span class="badge bg-warning text-dark fs-6">€110.0M</span>
+                <div class="text-muted extra-small">Rumor 85%</div>
+              </div>
+            </div>
+
+            <div class="transfer-card">
+              <div class="d-flex align-items-center gap-3">
+                <div class="player-avatar" style="width: 44px; height: 44px; font-size: 0.95rem; background: linear-gradient(135deg, #F59E0B, #D97706);">AD</div>
+                <div>
+                  <h4 class="h6 mb-0 text-white">A. Davies</h4>
+                  <span class="text-muted small">Left Back · Age 24</span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-muted small">Bayern</span>
+                <i class="bi bi-arrow-right text-warning fs-5"></i>
+                <span class="text-primary fw-bold">United FC</span>
+              </div>
+              <div class="text-end">
+                <span class="badge bg-primary fs-6">Free Agent</span>
+                <div class="text-muted extra-small">Contract Agreed</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="panel">
+            <h2 class="panel-title mb-3">Top Market Values</h2>
+            <ul class="fixture-list">
+              <li>
+                <div class="flex-grow-1">
+                  <p class="mb-0">R. Dias (Falcons FC)</p>
+                  <span class="time">Contract until 2028</span>
+                </div>
+                <span class="badge bg-dark border border-secondary text-warning">€120M</span>
+              </li>
+              <li>
+                <div class="flex-grow-1">
+                  <p class="mb-0">K. Owusu (Falcons FC)</p>
+                  <span class="time">Contract until 2029</span>
+                </div>
+                <span class="badge bg-dark border border-secondary text-warning">€95M</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 7: SETTINGS -->
+    <div id="view-settings" class="view-section">
+      <div class="row g-3">
+        <div class="col-lg-8">
+          <div class="panel">
+            <h2 class="panel-title mb-4"><i class="bi bi-sliders text-primary me-2"></i> Application Settings</h2>
+            
+            <div class="setting-item">
+              <div>
+                <h3 class="h6 mb-1 text-white">Live Match Push Notifications</h3>
+                <p class="text-muted small mb-0">Receive instant alerts on goals, red cards, and match kickoffs.</p>
+              </div>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" checked>
+              </div>
+            </div>
+
+            <div class="setting-item">
+              <div>
+                <h3 class="h6 mb-1 text-white">Vibrant Dark Mode Gradient</h3>
+                <p class="text-muted small mb-0">Enable custom colorful mesh gradients on dashboard background.</p>
+              </div>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" checked id="toggleGradientBg">
+              </div>
+            </div>
+
+            <div class="setting-item">
+              <div>
+                <h3 class="h6 mb-1 text-white">Sound Effects</h3>
+                <p class="text-muted small mb-0">Play goal stadium cheering audio effect during live match updates.</p>
+              </div>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox">
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-top border-secondary d-flex justify-content-end gap-2">
+              <button type="button" class="btn btn-outline-secondary">Reset Defaults</button>
+              <button type="button" class="btn btn-warning px-4 text-dark fw-bold">Save Preferences</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="panel text-center">
+            <div class="avatar-badge mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2.2rem; border-radius: 50%;">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <h3 class="h5 text-white mb-1">Alex Morgan</h3>
+            <p class="text-muted small mb-3">Head Analyst · Pro Tier</p>
+            <button class="btn btn-sm btn-outline-light w-100">Edit Profile</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
+    const viewSections = document.querySelectorAll('.view-section');
+    const pageTitle = document.getElementById('page-title');
+    const pageSub = document.getElementById('page-sub');
+    const mobileOffcanvasEl = document.getElementById('sidebarOffcanvas');
+
+    const pageMeta = {
+      'dashboard': {
+        title: 'Dashboard',
+        sub: 'Matchweek 28 — season 2025/26'
+      },
+      'matches': {
+        title: 'Matches & Fixtures',
+        sub: 'Live scores, upcoming fixtures & match statistics'
+      },
+      'players': {
+        title: 'Player Squad',
+        sub: 'Detailed player performance ratings & team statistics'
+      },
+      'teams': {
+        title: 'Teams & Clubs',
+        sub: 'League club standings, form guide & team details'
+      },
+      'standings': {
+        title: 'League Standings',
+        sub: 'Official season points table & qualification zones'
+      },
+      'transfers': {
+        title: 'Transfer Center',
+        sub: 'Confirmed deals, rumors & market values'
+      },
+      'settings': {
+        title: 'Dashboard Settings',
+        sub: 'Configure notifications, display themes & user preferences'
+      }
+    };
+
+    function switchView(targetView) {
+      if (!pageMeta[targetView]) return;
+
+      // Update sidebar nav links active status
+      navLinks.forEach(link => {
+        if (link.getAttribute('data-view') === targetView) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      // Hide all view sections, show target section
+      viewSections.forEach(section => {
+        if (section.id === `view-${targetView}`) {
+          section.classList.add('active-view');
+        } else {
+          section.classList.remove('active-view');
+        }
+      });
+
+      // Update Header Text
+      if (pageTitle && pageSub) {
+        pageTitle.textContent = pageMeta[targetView].title;
+        pageSub.textContent = pageMeta[targetView].sub;
+      }
+
+      // Close mobile offcanvas if open
+      if (mobileOffcanvasEl && window.bootstrap) {
+        const bsOffcanvas = bootstrap.Offcanvas.getInstance(mobileOffcanvasEl);
+        if (bsOffcanvas) {
+          bsOffcanvas.hide();
+        }
+      }
+    }
+
+    // Attach click handlers to all sidebar links
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetView = link.getAttribute('data-view');
+        switchView(targetView);
+        window.location.hash = targetView;
+      });
+    });
+
+    // Attach click handlers to inline switch links
+    document.querySelectorAll('.nav-switch-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetView = link.getAttribute('data-target-view');
+        switchView(targetView);
+        window.location.hash = targetView;
+      });
+    });
+
+    // Check hash on load
+    const initialHash = window.location.hash.replace('#', '');
+    if (initialHash && pageMeta[initialHash]) {
+      switchView(initialHash);
+    }
+  });
+</script>
+</body>
+</html>
